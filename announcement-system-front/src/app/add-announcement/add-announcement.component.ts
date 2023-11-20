@@ -10,36 +10,32 @@ import { HttpProviderService } from '../Service/http-provider.service';
   styleUrls: ['./add-announcement.component.scss']
 })
 
-export class AddEmployeeComponent implements OnInit {
-  addEmployeeForm: employeeForm = new employeeForm();
+export class AddAnnouncementComponent implements OnInit {
+  addAnnouncementForm: announcementForm = new announcementForm();
 
-  @ViewChild("employeeForm")
-  employeeForm!: NgForm;
+  @ViewChild("announcementForm")
+  announcementForm!: NgForm;
   isSubmitted: boolean = false;
   constructor(private router: Router, private httpProvider: HttpProviderService, private toastr: ToastrService) { }
 
   ngOnInit(): void {  }
 
-  AddEmployee(isValid: any) {
+  AddAnnouncement(isValid: any) {
     this.isSubmitted = true;
     if (isValid) {
-      this.httpProvider.saveEmployee(this.addEmployeeForm).subscribe(async data => {
-        if (data != null && data.body != null) {
-          if (data != null && data.body != null) {
-            var resultData = data.body;
-            if (resultData != null && resultData.isSuccess) {
-              this.toastr.success(resultData.message);
-              setTimeout(() => {
-                this.router.navigate(['/Home']);
-              }, 500);
-            }
-          }
+      this.httpProvider.saveAnnouncement(this.addAnnouncementForm).subscribe(async data => {
+        var resultData = data
+        if (resultData != null) {
+          this.toastr.success("บันทึกเสร็จสิ้น");
+          setTimeout(() => {
+            this.router.navigate(['']);
+          }, 500);
         }
       },
         async error => {
           this.toastr.error(error.message);
           setTimeout(() => {
-            this.router.navigate(['/Home']);
+            this.router.navigate(['']);
           }, 500);
         });
     }
@@ -47,10 +43,7 @@ export class AddEmployeeComponent implements OnInit {
 }
 
 
-export class employeeForm {
-  FirstName: string = "";
-  LastName: string = "";
-  Email: string = "";
-  Address: string = "";
-  Phone: string = "";
+export class announcementForm {
+  title: string = "";
+  detail: string = "";
 }

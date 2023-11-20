@@ -5,24 +5,30 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HomeComponent } from './home/home.component';
-// import { AddAnnouncementComponent } from './add-announcement/add-announcement.component';
+import { AddAnnouncementComponent } from './add-announcement/add-announcement.component';
 import { EditAnnouncementComponent } from './edit-announcement/edit-announcement.component';
-// import { ViewAnnouncementComponent } from './view-announcement/view-announcement.component';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    // AddAnnouncementComponent,
+    AddAnnouncementComponent,
     EditAnnouncementComponent,
-    // ViewAnnouncementComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    NgbModule
+    HttpClientModule,
+    FormsModule,
+    NgbModule,
+    ToastrModule.forRoot(),
+    BrowserAnimationsModule,
   ],
   providers: [],
-  bootstrap: [AppComponent,HomeComponent]
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,0 +1,52 @@
+<div class="container-xl">
+  <div class="table-responsive">
+    <div class="table-wrapper">
+      <div class="table-title">
+        <div class="row">
+          <div class="col-sm-6">
+            <h4><b>เพิ่มข้อมูล</b></h4>
+          </div>
+          <div class="col-sm-6">
+            <a href="#" routerLink="" class="btn btn-success back"><i class='fas fa-arrow-circle-left'></i>
+              &nbsp;ย้อนกลับ</a>
+          </div>
+        </div>
+      </div>
+      <form #announcementForm="ngForm">
+        <div class="table-content">
+          <div class="form-group p-10 row">
+            <div class="col-sm-3">
+              <label for="FirstName" class="p-t-b-10">หัวข้อ<span class="requiredStar">*</span></label>
+            </div>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="title" required maxlength="255"
+                [(ngModel)]="addAnnouncementForm.title" name="title" #title="ngModel">
+              <div *ngIf="title.errors && isSubmitted" class="alert alert-danger validationError">
+                <div [hidden]="!title.errors?.['required']">
+                  กรุณากรอกหัวข้อ
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group p-10 row">
+            <div class="col-sm-3">
+              <label for="detail" class="p-t-b-10">รายละเอียด<span class="requiredStar">*</span></label>
+            </div>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="detail" required maxlength="255"
+                [(ngModel)]="addAnnouncementForm.detail" name="detail" #detail="ngModel">
+              <div *ngIf="detail.errors && isSubmitted" class="alert alert-danger validationError">
+                <div [hidden]="!detail.errors?.['required']">
+                  กรุณากรอกรายละเอียด
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="table-footer">
+          <button class="btn btn-success" (click)="AddAnnouncement(announcementForm.form.valid)">บันทึกข้อมูล</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

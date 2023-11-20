@@ -1,33 +1,68 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { WebApiService } from './web-api.service';
-
-var apiUrl = "http://localhost:8100/";
-
-var httpLink = {
-  getAllEmployee: apiUrl + "/api/employee/getAllEmployee",
-  deleteEmployeeById: apiUrl + "/api/employee/deleteEmployeeById",
-  getEmployeeDetailById: apiUrl + "/api/employee/getEmployeeDetailById",
-  saveEmployee: apiUrl + "/api/employee/saveEmployee"
-}
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
-
 export class HttpProviderService {
-  constructor(private webApiService: WebApiService) { }
+  private apiUrl = 'http://localhost:3000/announcements';
 
-  public getAllEmployee(): Observable<any> {
-    return this.webApiService.get(httpLink.getAllEmployee);
+  constructor(private http: HttpClient) { }
+
+  public getAllAnnouncement(): Observable<any> {
+    return this.http.get(this.apiUrl)
+      .pipe(
+        catchError((error: any) => {
+          // Handle error (log, display message, etc.)
+          console.error('Error fetching announcements:', error);
+          return throwError(error);
+        })
+      );
   }
-  public deleteEmployeeById(model: any): Observable<any> {
-    return this.webApiService.post(httpLink.deleteEmployeeById + '?employeeId=' + model, "");
+  public getAnnouncementById(id: number): Observable<any> {
+    const url = `${this.apiUrl}/${id}`;
+    return this.http.get(url)
+      .pipe(
+        catchError((error: any) => {
+          console.error(`Error fetching announcements with ID ${id}:`, error);
+          return throwError(error);
+        })
+      );
   }
-  public getEmployeeDetailById(model: any): Observable<any> {
-    return this.webApiService.get(httpLink.getEmployeeDetailById + '?employeeId=' + model);
+  public saveAnnouncement(payload: any): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    return this.http.post(this.apiUrl, payload, { headers })
+      .pipe(
+        catchError((error: any) => {
+          // Handle error (log, display message, etc.)
+          console.error('Error saving announcement:', error);
+          return throwError(error);
+        })
+      );
   }
-  public saveEmployee(model: any): Observable<any> {
-    return this.webApiService.post(httpLink.saveEmployee, model);
+  public editAnnouncement(payload: any, id: number): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const url = `${this.apiUrl}/${id}`;
+    return this.http.put(url, payload, { headers })
+      .pipe(
+        catchError((error: any) => {
+          // Handle error (log, display message, etc.)
+          console.error('Error editing announcement:', error);
+          return throwError(error);
+        })
+      );
+  }
+  public deleteAnnouncement(id: number): Observable<any> {
+    const url = `${this.apiUrl}/${id}`;
+    return this.http.delete(url)
+      .pipe(
+        catchError((error: any) => {
+          console.error(`Error deleting announcement with ID ${id}:`, error);
+          return throwError(error);
+        })
+      );
   }
 }

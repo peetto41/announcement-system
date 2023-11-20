@@ -19,6 +19,7 @@ app.get('/', (req: Request, res: Response) => {
 });
 // route api
 app.get('/announcements', api.getAnnouncements);
+app.get('/announcements/:id', api.getInfoAnnouncements);
 app.post('/announcements', api.addAnnouncement);
 app.put('/announcements/:id', api.updateAnnouncement);
 app.delete('/announcements/:id', api.deleteAnnouncement);

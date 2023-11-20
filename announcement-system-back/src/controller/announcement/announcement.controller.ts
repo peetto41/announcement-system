@@ -13,7 +13,25 @@ export function getAnnouncements(req: Request, res: Response): void {
       console.error('Error executing MySQL query:', err);
       res.status(500).send('Internal Server Error');
     } else {
+      console.log(results);
       res.json(results);
+    }
+  });
+}
+
+// read show info Announcements
+export function getInfoAnnouncements(req: Request, res: Response): void {
+  const { id } = req.params;
+
+  const query = 'SELECT id,title,detail,created_date,updated_date FROM annoucement WHERE id = ?';
+
+  db.query(query,[id], (err, results) => {
+    if (err) {
+      console.error('Error executing MySQL query:', err);
+      res.status(500).send('Internal Server Error');
+    } else {
+      console.log(results);
+      res.json(results[0]);
     }
   });
 }

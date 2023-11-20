@@ -8,21 +8,20 @@ import { HttpProviderService } from '../Service/http-provider.service';
   selector: 'ng-modal-confirm',
   template: `
   <div class="modal-header">
-    <h5 class="modal-title" id="modal-title">Delete Confirmation</h5>
+    <h5 class="modal-title" id="modal-title">ยืนยันการลบข้อมูล</h5>
     <button type="button" class="btn close" aria-label="Close button" aria-describedby="modal-title" (click)="modal.dismiss('Cross click')">
-      <span aria-hidden="true">×</span>
+      <span aria-hidden="true">&times;</span>
     </button>
   </div>
   <div class="modal-body">
-    <p>Are you sure you want to delete?</p>
+    <p>คุณแน่ใจหรือไม่ว่าต้องการลบข้อมูล?</p>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('cancel click')">CANCEL</button>
-    <button type="button" ngbAutofocus class="btn btn-success" (click)="modal.close('Ok click')">OK</button>
+    <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('cancel click')">ยกเลิก</button>
+    <button type="button" ngbAutofocus class="btn btn-success" (click)="modal.close('Ok click')">ตกลง</button>
   </div>
   `,
 })
-
 export class NgModalConfirm {
   constructor(public modal: NgbActiveModal) { }
 }
@@ -36,60 +35,59 @@ const MODALS: { [name: string]: Type<any> } = {
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-
-export class HomeComponent implements OnInit {
-  closeResult = '';
-  employeeList: any = [];
-  constructor(private router: Router, private modalService: NgbModal,
-    private toastr: ToastrService, private httpProvider : HttpProviderService) { }
-
-  ngOnInit(): void {
-    this.getAllEmployee();
-  }
-  async getAllEmployee() {
-    this.httpProvider.getAllEmployee().subscribe((data : any) => {
-      if (data != null && data.body != null) {
-        var resultData = data.body;
-        if (resultData) {
-          this.employeeList = resultData;
-        }
-      }
-    },
-    (error : any)=> {
-        if (error) {
-          if (error.status == 404) {
-            if(error.error && error.error.message){
-              this.employeeList = [];
+export class HomeComponent {
+  announcementList: any = [];
+  constructor(
+    private router: Router,
+    private modalService: NgbModal,
+    private toastr: ToastrService,
+    private httpProvider : HttpProviderService) { }
+    ngOnInit(): void {
+      this.getAllAnnouncement();
+    }
+    async getAllAnnouncement() {
+      this.httpProvider.getAllAnnouncement().subscribe(
+        (data: any) => {
+          var resultData = data;
+            if (resultData) {
+              console.log('Announcement List:', resultData);
+              this.announcementList = resultData;
+            }
+        },
+        (error: any) => {
+          if (error) {
+            if (error.status == 404) {
+              if (error.error && error.error.message) {
+                console.log('Announcement List:', error.error);
+                this.announcementList = [];
+              }
             }
           }
         }
-      });
-  }
-
-  AddEmployee() {
-    this.router.navigate(['AddEmployee']);
-  }
-
-  deleteEmployeeConfirmation(employee: any) {
-    this.modalService.open(MODALS['deleteModal'],
-      {
-        ariaLabelledBy: 'modal-basic-title'
-      }).result.then((result) => {
-        this.deleteEmployee(employee);
-      },
-        (reason) => {});
-  }
-
-  deleteEmployee(employee: any) {
-    this.httpProvider.deleteEmployeeById(employee.id).subscribe((data : any) => {
-      if (data != null && data.body != null) {
-        var resultData = data.body;
-        if (resultData != null && resultData.isSuccess) {
-          this.toastr.success(resultData.message);
-          this.getAllEmployee();
+      );
+    }
+    AddAnnouncement() {
+      this.router.navigate(['add-data']);
+    }
+    deleteAnnouncementConfirmation(announcement: any) {
+      this.modalService.open(MODALS['deleteModal'],
+        {
+          ariaLabelledBy: 'modal-basic-title'
+        }).result.then((result) => {
+          this.deleteAnnouncement(announcement);
+        },
+          (reason) => {});
+    }
+    deleteAnnouncement(announcement: any) {
+      this.httpProvider.deleteAnnouncement(announcement.id).subscribe((data : any) => {
+        if (data != null) {
+          var resultData = data;
+          if (resultData != null) {
+            this.toastr.success('ลบข้อมูลสำเร็จ');
+            this.getAllAnnouncement();
+          }
         }
-      }
-    },
-    (error : any) => {});
-  }
+      },
+      (error : any) => {});
+    }
 }

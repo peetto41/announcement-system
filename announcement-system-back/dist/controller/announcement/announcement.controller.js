@@ -3,9 +3,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteAnnouncement = exports.updateAnnouncement = exports.addAnnouncement = exports.getAnnouncements = void 0;
+exports.deleteAnnouncement = exports.updateAnnouncement = exports.addAnnouncement = exports.getInfoAnnouncements = exports.getAnnouncements = void 0;
 const configDB_1 = __importDefault(require("../../config/configDB"));
 const db = (0, configDB_1.default)();
+// read show all Announcements
 function getAnnouncements(req, res) {
     const query = 'SELECT id,title,detail,created_date,updated_date FROM annoucement';
     db.query(query, (err, results) => {
@@ -14,11 +15,29 @@ function getAnnouncements(req, res) {
             res.status(500).send('Internal Server Error');
         }
         else {
+            console.log(results);
             res.json(results);
         }
     });
 }
 exports.getAnnouncements = getAnnouncements;
+// read show info Announcements
+function getInfoAnnouncements(req, res) {
+    const { id } = req.params;
+    const query = 'SELECT id,title,detail,created_date,updated_date FROM annoucement WHERE id = ?';
+    db.query(query, [id], (err, results) => {
+        if (err) {
+            console.error('Error executing MySQL query:', err);
+            res.status(500).send('Internal Server Error');
+        }
+        else {
+            console.log(results);
+            res.json(results[0]);
+        }
+    });
+}
+exports.getInfoAnnouncements = getInfoAnnouncements;
+// insert Announcements
 function addAnnouncement(req, res) {
     const { title, detail } = req.body;
     const query = 'INSERT INTO annoucement (title, detail) VALUES (?, ?)';
@@ -34,6 +53,7 @@ function addAnnouncement(req, res) {
     });
 }
 exports.addAnnouncement = addAnnouncement;
+// update Announcements
 function updateAnnouncement(req, res) {
     const { id } = req.params;
     const { title, detail } = req.body;
@@ -50,6 +70,7 @@ function updateAnnouncement(req, res) {
     });
 }
 exports.updateAnnouncement = updateAnnouncement;
+// delete Announcements
 function deleteAnnouncement(req, res) {
     const { id } = req.params;
     const query = 'DELETE FROM annoucement WHERE id = ?';

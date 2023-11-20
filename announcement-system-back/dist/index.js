@@ -28,68 +28,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 // index.ts
 const express_1 = __importDefault(require("express"));
-const configDB_1 = __importDefault(require("./config/configDB"));
 const cors_1 = __importDefault(require("cors"));
 const api = __importStar(require("./controller/announcement/announcement.controller"));
 const app = (0, express_1.default)();
-const port = 3000;
+const port = process.env.PORT;
 app.use((0, cors_1.default)({ origin: true }));
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({
     extended: true,
 }));
-// Configure the database
-const db = (0, configDB_1.default)();
 app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 // route api
 app.get('/announcements', api.getAnnouncements);
+app.get('/announcements/:id', api.getInfoAnnouncements);
 app.post('/announcements', api.addAnnouncement);
-app.put('/announcement/:id', api.updateAnnouncement);
-app.delete('/announcement/:id', api.deleteAnnouncement);
-// // Insert a new announcement
-// app.post('/announcement', (req: Request, res: Response) => {
-//     const { title, detail } = req.body;
-//     const query = 'INSERT INTO announcement (title, detail) VALUES (?, ?)';
-//     const values = [title, detail];
-//     db.query(query, values, (err, results) => {
-//       if (err) {
-//         console.error('Error executing MySQL query:', err);
-//         res.status(500).send('Internal Server Error');
-//       } else {
-//         res.json({ message: 'Announcement added successfully', id: results.insertId });
-//       }
-//     });
-//   });
-//   // Update an existing announcement
-//   app.put('/announcement/:id', (req: Request, res: Response) => {
-//     const { id } = req.params;
-//     const { title, detail } = req.body;
-//     const query = 'UPDATE announcement SET title = ?, detail = ? WHERE id = ?';
-//     const values = [title, detail, id];
-//     db.query(query, values, (err) => {
-//       if (err) {
-//         console.error('Error executing MySQL query:', err);
-//         res.status(500).send('Internal Server Error');
-//       } else {
-//         res.json({ message: 'Announcement updated successfully', id });
-//       }
-//     });
-//   });
-//   // Delete an announcement
-//   app.delete('/announcement/:id', (req: Request, res: Response) => {
-//     const { id } = req.params;
-//     const query = 'DELETE FROM announcement WHERE id = ?';
-//     db.query(query, [id], (err) => {
-//       if (err) {
-//         console.error('Error executing MySQL query:', err);
-//         res.status(500).send('Internal Server Error');
-//       } else {
-//         res.json({ message: 'Announcement deleted successfully', id });
-//       }
-//     });
-//   });
+app.put('/announcements/:id', api.updateAnnouncement);
+app.delete('/announcements/:id', api.deleteAnnouncement);
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
 });
