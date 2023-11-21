@@ -22,7 +22,7 @@
               <input type="text" class="form-control" id="title" required maxlength="255"
                 [(ngModel)]="addAnnouncementForm.title" name="title" #title="ngModel">
               <div *ngIf="title.errors && isSubmitted" class="alert alert-danger validationError">
-                <div [hidden]="!title.errors?.['required']">
+                <div [hidden]="!title.errors || !title.errors['required']">
                   กรุณากรอกหัวข้อ
                 </div>
               </div>
@@ -36,7 +36,7 @@
               <input type="text" class="form-control" id="detail" required maxlength="255"
                 [(ngModel)]="addAnnouncementForm.detail" name="detail" #detail="ngModel">
               <div *ngIf="detail.errors && isSubmitted" class="alert alert-danger validationError">
-                <div [hidden]="!detail.errors?.['required']">
+                <div [hidden]="!detail.errors || !detail.errors['required']">
                   กรุณากรอกรายละเอียด
                 </div>
               </div>
